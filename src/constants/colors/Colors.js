@@ -3,6 +3,7 @@ const lightColors = {
   secondary: "#4CD964",
   background: "#F5F5F5",
   text: "#000000",
+  textTitle: "#F5F5F5",
 };
 
 const darkColors = {
@@ -10,6 +11,7 @@ const darkColors = {
   secondary: "#34C759",
   background: "#1C1C1E",
   text: "#F5F5F5",
+  textTitle: "#F5F5F5",
 };
 
 export default {

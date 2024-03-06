@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import COLORS from "../../src/constants/colors/Colors";
 import HomeScreen from "../screens/Home/HomeScreen";
 import CartScreen from "../screens/Cart/CartScreen";
@@ -17,7 +17,15 @@ const Navigation = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: colors.primary,
+        },
+        headerTitle: "E-Market",
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          color: colors.textTitle,
+          fontWeight: "bold",
+        },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
