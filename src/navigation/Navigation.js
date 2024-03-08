@@ -6,36 +6,39 @@ import CartScreen from "../screens/Cart/CartScreen";
 import FavoritesScreen from "../screens/Favorite/FavoritesScreen";
 import ProfileScreen from "../screens/User/ProfileScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import Details from "../screens/Products/Details";
-import { createStackNavigator } from "@react-navigation/stack";
+import { useSelector, shallowEqual } from "react-redux";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const HomeStack = createStackNavigator();
+const colors = COLORS.light; // Sonrasında dark mode eklenecek.
+
+const HomeStackNavigator = () => (
+  <HomeStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: colors.primary,
+      },
+      headerTitleAlign: "center",
+      headerTitleStyle: {
+        color: colors.textTitle,
+        fontWeight: "bold",
+      },
+      headerTintColor: colors.textTitle,
+    }}
+  >
+    <HomeStack.Screen name="E-Market" component={HomeScreen} />
+    <HomeStack.Screen name="ProductDetail" component={Details} />
+  </HomeStack.Navigator>
+);
 
 const Navigation = () => {
-  const colors = COLORS.light; // Sonrasında dark mode eklenecek.
-
-  const HomeStack = () => {
-    return (
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.primary,
-          },
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            color: colors.textTitle,
-            fontWeight: "bold",
-          },
-          headerTintColor: colors.textTitle,
-        }}
-      >
-        <Stack.Screen name="E-Market" component={HomeScreen} />
-        <Stack.Screen name="ProductDetail" component={Details} />
-      </Stack.Navigator>
-    );
-  };
+  const totalItems = useSelector(
+    (state) => state.cart.totalItems,
+    shallowEqual
+  );
 
   return (
     <Tab.Navigator
@@ -45,7 +48,6 @@ const Navigation = () => {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
-          //   fontSize: Dimensions.get("window").width > 400 ? 14 : 12, Labelleri kaldırdım.
           display: "none",
         },
         tabBarStyle: {
@@ -55,7 +57,7 @@ const Navigation = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeStack}
+        component={HomeStackNavigator} // Değişiklik burada
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
@@ -77,6 +79,17 @@ const Navigation = () => {
               color={color}
             />
           ),
+          tabBarBadge: totalItems == 0 ? null : totalItems,
+          headerShown: true,
+          title: "Cart",
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: colors.textTitle,
+            fontWeight: "bold",
+          },
         }}
       />
       <Tab.Screen

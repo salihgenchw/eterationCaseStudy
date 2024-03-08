@@ -11,8 +11,14 @@ import COLORS from "../../src/constants/colors/Colors";
 import { Feather } from "@expo/vector-icons";
 import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addItemToCart,
+  removeItemFromCart,
+} from "../redux/reducers/cartReducer";
 
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch();
   const { image, name, price } = product;
   let navigation = useNavigation();
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
@@ -66,6 +72,9 @@ const ProductCard = ({ product }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.AddToCartBtn, { backgroundColor: colors.primary }]}
+        onPress={() => {
+          dispatch(addItemToCart(product));
+        }}
       >
         <Text
           style={{
