@@ -7,25 +7,41 @@ import FavoritesScreen from "../screens/Favorite/FavoritesScreen";
 import ProfileScreen from "../screens/User/ProfileScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import Details from "../screens/Products/Details";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const Navigation = () => {
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
+
+  const HomeStack = () => {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: colors.textTitle,
+            fontWeight: "bold",
+          },
+          headerTintColor: colors.textTitle,
+        }}
+      >
+        <Stack.Screen name="E-Market" component={HomeScreen} />
+        <Stack.Screen name="ProductDetail" component={Details} />
+      </Stack.Navigator>
+    );
+  };
 
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.primary,
-        },
-        headerTitle: "E-Market",
-        headerTitleAlign: "center",
-        headerTitleStyle: {
-          color: colors.textTitle,
-          fontWeight: "bold",
-        },
+        headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
@@ -39,7 +55,7 @@ const Navigation = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons

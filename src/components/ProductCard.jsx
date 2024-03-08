@@ -9,19 +9,43 @@ import {
 } from "react-native";
 import COLORS from "../../src/constants/colors/Colors";
 import { Feather } from "@expo/vector-icons";
+import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
+import { useNavigation } from "@react-navigation/native";
 
 const ProductCard = ({ product }) => {
   const { image, name, price } = product;
+  let navigation = useNavigation();
+  const colors = COLORS.light; // Sonrasında dark mode eklenecek.
+
+  let [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   const addToFavorites = (product) => {
     console.log("Product added to favorites", product);
   };
-  const colors = COLORS.light; // Sonrasında dark mode eklenecek.
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        navigation.navigate("ProductDetail", { product });
+      }}
+    >
       <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.details}>
-        <Text style={[styles.price, { color: colors.primary }]}>{price} ₺</Text>
+        <Text
+          style={[
+            styles.price,
+            { color: colors.primary, fontFamily: "Montserrat_500Medium" },
+          ]}
+        >
+          {price} ₺
+        </Text>
         <Text numberOfLines={2} style={styles.name}>
           {name}
         </Text>
@@ -29,7 +53,7 @@ const ProductCard = ({ product }) => {
         sığmasını sağladık. */}
       </View>
       <TouchableOpacity
-        style={[styles.favoriteBtn, { backgroundColor: colors.primary }]}
+        style={[styles.favoriteBtn, { backgroundColor: colors.textTitle }]}
         onPress={() => {
           addToFavorites(product);
         }}
@@ -43,9 +67,16 @@ const ProductCard = ({ product }) => {
       <TouchableOpacity
         style={[styles.AddToCartBtn, { backgroundColor: colors.primary }]}
       >
-        <Text style={{ color: colors.textTitle }}>Add to Cart</Text>
+        <Text
+          style={{
+            color: colors.textTitle,
+            fontFamily: "Montserrat_500Medium",
+          }}
+        >
+          Add to Cart
+        </Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -74,6 +105,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: Dimensions.get("window").width / 28,
     height: Dimensions.get("window").height / 20,
+    fontFamily: "Montserrat_500Medium",
   },
   price: {
     fontSize: Dimensions.get("window").width / 28,
