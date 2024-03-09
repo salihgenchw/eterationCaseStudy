@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../../src/constants/colors/Colors";
-import { Feather, FontAwesome } from "@expo/vector-icons";
+import { Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,9 +16,14 @@ import {
   addItemToCart,
   removeItemFromCart,
 } from "../redux/reducers/cartReducer";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../redux/reducers/favoritesReducer";
 
 const ProductCard = ({ product }) => {
   const CartItems = useSelector((state) => state.cart.items);
+  const FavoriteItem = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
   let navigation = useNavigation();
   const { image, name, price } = product;
@@ -32,8 +37,12 @@ const ProductCard = ({ product }) => {
     return null;
   }
 
-  const addToFavorites = (product) => {
-    console.log("Product added to favorites", product);
+  const addFavoriteFunc = (product) => {
+    if (!FavoriteItem.find((item) => item.id === product.id)) {
+      dispatch(addToFavorites({ product }));
+    } else {
+      dispatch(removeFromFavorites({ productId: product.id }));
+    }
   };
 
   const handleIncreaseQuantity = (item) => {
@@ -70,14 +79,22 @@ const ProductCard = ({ product }) => {
       <TouchableOpacity
         style={[styles.favoriteBtn, { backgroundColor: colors.textTitle }]}
         onPress={() => {
-          addToFavorites(product);
+          addFavoriteFunc(product);
         }}
       >
-        <Feather
-          name="heart"
-          size={Dimensions.get("window").width / 25}
-          color={colors.white}
-        />
+        {FavoriteItem.find((item) => item.id === product.id) ? (
+          <AntDesign
+            name="heart"
+            size={Dimensions.get("window").width / 25}
+            color={colors.danger}
+          />
+        ) : (
+          <AntDesign
+            name="hearto"
+            size={Dimensions.get("window").width / 25}
+            color={colors.white}
+          />
+        )}
       </TouchableOpacity>
 
       {CartItems.find((item) => item.id === product.id) ? (
