@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import FilterBtn from "../../components/FilterBtn";
@@ -18,7 +18,7 @@ const HomeScreen = () => {
       const response = await APIManager(Endpoints.GET_PRODUCTS, "GET");
       setProducts(response);
     } catch (error) {
-      console.log("error", error);
+      Alert.alert("Error", "An error occurred while fetching products");
     }
   };
 

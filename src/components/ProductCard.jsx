@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import COLORS from "../../src/constants/colors/Colors";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,9 +18,10 @@ import {
 } from "../redux/reducers/cartReducer";
 
 const ProductCard = ({ product }) => {
+  const CartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
-  const { image, name, price } = product;
   let navigation = useNavigation();
+  const { image, name, price } = product;
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
 
   let [fontsLoaded] = useFonts({
@@ -33,6 +34,14 @@ const ProductCard = ({ product }) => {
 
   const addToFavorites = (product) => {
     console.log("Product added to favorites", product);
+  };
+
+  const handleIncreaseQuantity = (item) => {
+    dispatch(addItemToCart(item));
+  };
+
+  const handleDecreaseQuantity = (item) => {
+    dispatch(removeItemFromCart(item));
   };
 
   return (
@@ -70,21 +79,54 @@ const ProductCard = ({ product }) => {
           color={colors.white}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.AddToCartBtn, { backgroundColor: colors.primary }]}
-        onPress={() => {
-          dispatch(addItemToCart(product));
-        }}
-      >
-        <Text
-          style={{
-            color: colors.textTitle,
-            fontFamily: "Montserrat_500Medium",
+
+      {CartItems.find((item) => item.id === product.id) ? (
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            onPress={() => handleDecreaseQuantity(product)}
+            style={styles.buttonContainer}
+          >
+            {CartItems.find((item) => item.id === product.id).quantity === 1 ? (
+              <FontAwesome
+                name="trash-o"
+                size={Dimensions.get("window").width / 22}
+                color={colors.text}
+              />
+            ) : (
+              <Text style={styles.minusPlusText}>-</Text>
+            )}
+          </TouchableOpacity>
+          <View
+            style={[styles.quantityView, { backgroundColor: colors.primary }]}
+          >
+            <Text style={[styles.minusPlusText, { color: colors.textTitle }]}>
+              {CartItems.find((item) => item.id === product.id).quantity}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => handleIncreaseQuantity(product)}
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.minusPlusText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity
+          style={[styles.AddToCartBtn, { backgroundColor: colors.primary }]}
+          onPress={() => {
+            dispatch(addItemToCart(product));
           }}
         >
-          Add to Cart
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: colors.textTitle,
+              fontFamily: "Montserrat_500Medium",
+            }}
+          >
+            Add to Cart
+          </Text>
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   );
 };
@@ -133,6 +175,22 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignSelf: "center",
+  },
+  buttonContainer: {
+    backgroundColor: "#dedede",
+    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingVertical: Dimensions.get("window").width / 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  minusPlusText: {
+    fontSize: Dimensions.get("window").width / 22,
+  },
+  quantityView: {
+    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingVertical: Dimensions.get("window").width / 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
