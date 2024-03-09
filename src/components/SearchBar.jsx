@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   TextInput,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 function SearchBar({ textFilter, getLastValue }) {
   const [text, setText] = useState(""); // TextInput değeri için state tanımı
+  const [alertShown, setAlertShown] = useState(false);
 
   const handleSearch = (value) => {
     setText(value); // TextInput içeriğini güncelle
@@ -31,6 +33,21 @@ function SearchBar({ textFilter, getLastValue }) {
       textFilter("");
     }
   };
+
+  useEffect(() => {
+    if (!alertShown && text.length > 0) {
+      Alert.alert(
+        "Bi saniye⚠️",
+        "mockapi tarafında search özelliğini göremedim. Search özelliğini de ön tarafta yapmak istemedim.",
+        [
+          {
+            text: "Peki öyle olsun 🤷‍♂️",
+            onPress: () => setAlertShown(true),
+          },
+        ]
+      );
+    }
+  }, [text, alertShown]);
 
   return (
     <KeyboardAvoidingView style={styles.bar}>
