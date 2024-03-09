@@ -20,4 +20,10 @@ Eteration için yapılmış e-ticaret temalı case study çalışması
 
 ## Kurulum
 
-Proje sonunda eklenecek.
+Proje tarafında expo kullanılmıştır. Projeyi npx expo start diye çalıştırabilirsiniz. Telefonunuzdaki expo go uygulaması ile terminaldeki qr kodu okutarak projeyi telefonunuz üzerinde açabilirsiniz. Pcniz veya macinizde node versiyonunun en az v18.13.0 olduğundan emin olunuz. 🚀
+
+Dilerseniz uygulamayı sizlere apk olarak da teslim edebilirim.. (Sadece android)
+
+Bana lütfen soru sormaktan çekinmeyin.
+
+https://www.linkedin.com/in/salihgenc/
