@@ -12,11 +12,25 @@ import { useSelector } from "react-redux";
 import COLORS from "../../constants/colors/Colors";
 import { removeFromFavorites } from "../../redux/reducers/favoritesReducer";
 import { useDispatch } from "react-redux";
+import {
+  useFonts,
+  Montserrat_700Bold,
+  Montserrat_500Medium,
+} from "@expo-google-fonts/montserrat";
 
 const FavoritesScreen = () => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.favorites.favorites);
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
+
+  let [fontsLoaded] = useFonts({
+    Montserrat_700Bold,
+    Montserrat_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleDeleteFromFavorites = (item) => {
     dispatch(removeFromFavorites({ productId: item.id }));
