@@ -15,11 +15,19 @@ import {
   Montserrat_500Medium,
 } from "@expo-google-fonts/montserrat";
 import COLORS from "../../constants/colors/Colors";
+import { FontAwesome } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addItemToCart,
+  removeItemFromCart,
+} from "../../redux/reducers/cartReducer";
 
 const Details = ({ navigation }) => {
   const route = useRoute();
   const { product } = route.params;
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
+  const CartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     product &&
@@ -37,6 +45,14 @@ const Details = ({ navigation }) => {
     return null;
   }
 
+  const handleIncreaseQuantity = (item) => {
+    dispatch(addItemToCart(item));
+  };
+
+  const handleDecreaseQuantity = (item) => {
+    dispatch(removeItemFromCart(item));
+  };
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: product.image }} style={styles.image} />
@@ -48,25 +64,54 @@ const Details = ({ navigation }) => {
       </ScrollView>
       <View style={styles.addToCartContainer}>
         <Text style={styles.productPrice}>Price: {product.price} ₺</Text>
-        <TouchableOpacity
-          style={styles.addToCartBtn}
-          onPress={() => {
-            console.log("Product added to cart", product);
-          }}
-        >
-          <Text
-            style={[
-              styles.addToCartText,
-              {
-                backgroundColor: colors.primary,
+        {CartItems.find((item) => item.id === product.id) ? (
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <TouchableOpacity
+              onPress={() => handleDecreaseQuantity(product)}
+              style={styles.buttonContainer}
+            >
+              {CartItems.find((item) => item.id === product.id).quantity ===
+              1 ? (
+                <FontAwesome
+                  name="trash-o"
+                  size={Dimensions.get("window").width / 22}
+                  color={colors.text}
+                />
+              ) : (
+                <Text style={styles.minusPlusText}>-</Text>
+              )}
+            </TouchableOpacity>
+            <View
+              style={[styles.quantityView, { backgroundColor: colors.primary }]}
+            >
+              <Text style={[styles.minusPlusText, { color: colors.textTitle }]}>
+                {CartItems.find((item) => item.id === product.id).quantity}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => handleIncreaseQuantity(product)}
+              style={styles.buttonContainer}
+            >
+              <Text style={styles.minusPlusText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={[styles.AddToCartBtn, { backgroundColor: colors.primary }]}
+            onPress={() => {
+              dispatch(addItemToCart(product));
+            }}
+          >
+            <Text
+              style={{
                 color: colors.textTitle,
                 fontFamily: "Montserrat_500Medium",
-              },
-            ]}
-          >
-            Add to Cart
-          </Text>
-        </TouchableOpacity>
+              }}
+            >
+              Add to Cart
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -111,5 +156,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderTopWidth: 1,
+  },
+  buttonContainer: {
+    backgroundColor: "#dedede",
+    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingVertical: Dimensions.get("window").width / 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  minusPlusText: {
+    fontSize: Dimensions.get("window").width / 22,
+  },
+  quantityView: {
+    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingVertical: Dimensions.get("window").width / 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  AddToCartBtn: {
+    width: Dimensions.get("window").width / 2 - 36,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: "center",
+    marginTop: 10,
   },
 });
