@@ -15,19 +15,24 @@ import {
   Montserrat_500Medium,
 } from "@expo-google-fonts/montserrat";
 import COLORS from "../../constants/colors/Colors";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItemToCart,
   removeItemFromCart,
 } from "../../redux/reducers/cartReducer";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../../redux/reducers/favoritesReducer";
 
 const Details = ({ navigation }) => {
   const route = useRoute();
+  const dispatch = useDispatch();
   const { product } = route.params;
   const colors = COLORS.light; // Sonrasında dark mode eklenecek.
   const CartItems = useSelector((state) => state.cart.items);
-  const dispatch = useDispatch();
+  const FavoriteItem = useSelector((state) => state.favorites.favorites);
 
   useEffect(() => {
     product &&
@@ -53,9 +58,39 @@ const Details = ({ navigation }) => {
     dispatch(removeItemFromCart(item));
   };
 
+  const addFavoriteFunc = (product) => {
+    if (!FavoriteItem.find((item) => item.id === product.id)) {
+      dispatch(addToFavorites({ product }));
+    } else {
+      dispatch(removeFromFavorites({ productId: product.id }));
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: product.image }} style={styles.image} />
+
+      <TouchableOpacity
+        style={[styles.favoriteBtn, { backgroundColor: colors.textTitle }]}
+        onPress={() => {
+          addFavoriteFunc(product);
+        }}
+      >
+        {FavoriteItem.find((item) => item.id === product.id) ? (
+          <AntDesign
+            name="heart"
+            size={Dimensions.get("window").width / 20}
+            color={colors.danger}
+          />
+        ) : (
+          <AntDesign
+            name="hearto"
+            size={Dimensions.get("window").width / 20}
+            color={colors.white}
+          />
+        )}
+      </TouchableOpacity>
+
       <Text numberOfLines={2} style={styles.productName}>
         {product.name}
       </Text>
@@ -180,5 +215,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: "center",
     marginTop: 10,
+  },
+  favoriteBtn: {
+    position: "absolute",
+    top: Dimensions.get("window").height / 30,
+    right: Dimensions.get("window").width / 15,
+    padding: 7,
+    borderRadius: 20,
   },
 });
