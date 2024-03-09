@@ -39,6 +39,10 @@ const Navigation = () => {
     (state) => state.cart.totalItems,
     shallowEqual
   );
+  const totalFavorites = useSelector(
+    (state) => state.favorites.favorites.length,
+    shallowEqual
+  );
 
   return (
     <Tab.Navigator
@@ -103,6 +107,16 @@ const Navigation = () => {
               color={color}
             />
           ),
+          tabBarBadge: totalFavorites == 0 ? null : totalFavorites,
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: colors.primary,
+          },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: colors.textTitle,
+            fontWeight: "bold",
+          },
         }}
       />
       <Tab.Screen
