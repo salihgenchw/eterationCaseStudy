@@ -43,7 +43,7 @@ const HomeScreen = () => {
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductCard product={item} />}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         numColumns={2}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
