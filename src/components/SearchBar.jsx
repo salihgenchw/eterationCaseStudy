@@ -10,12 +10,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 function SearchBar({ textFilter, getLastValue }) {
-  const [text, setText] = useState(""); // TextInput değeri için state tanımı
+  const [text, setText] = useState("");
   const [alertShown, setAlertShown] = useState(false);
 
   const handleSearch = (value) => {
-    setText(value); // TextInput içeriğini güncelle
-    // textFilter fonksiyonunu çağır
+    setText(value);
     if (getLastValue !== undefined) {
       getLastValue(value);
     }
@@ -25,7 +24,7 @@ function SearchBar({ textFilter, getLastValue }) {
   };
 
   const handleClear = () => {
-    setText(""); // TextInput içeriğini sıfırla
+    setText("");
     if (getLastValue !== undefined) {
       getLastValue("");
     }

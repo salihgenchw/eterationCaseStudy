@@ -1,15 +1,15 @@
 import React from "react";
 import { StyleSheet } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Ionicons } from "@expo/vector-icons";
+import { useSelector, shallowEqual } from "react-redux";
 import COLORS from "../../src/constants/colors/Colors";
 import HomeScreen from "../screens/Home/HomeScreen";
 import CartScreen from "../screens/Cart/CartScreen";
 import FavoritesScreen from "../screens/Favorite/FavoritesScreen";
 import ProfileScreen from "../screens/User/ProfileScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { Ionicons } from "@expo/vector-icons";
 import Details from "../screens/Products/Details";
-import { useSelector, shallowEqual } from "react-redux";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
